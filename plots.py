@@ -1,14 +1,8 @@
 """
 plots.py - Visualization of spread history and P&L.
-
-Generates matplotlib charts:
-  - Historical effective spreads by order size
-  - Cumulative P&L over time (realized + unrealized)
-  - Position evolution over time
 """
 
 import matplotlib.pyplot as plt
-import numpy as np
 from datetime import datetime
 
 
@@ -40,32 +34,21 @@ def plot_pnl(market_maker, save=True):
         print("[PLOT] No trades to plot.")
         return
 
-    # Reconstruct cumulative P&L from trade log
     timestamps = []
-    cum_realized = []
+    realized_pnl = []
     positions = []
-    running_pnl = 0.0
 
-    for i, t in enumerate(trades):
+    for t in trades:
         timestamps.append(datetime.fromtimestamp(t["timestamp"]))
         positions.append(t["position_after"])
-
-        # Approximate realized P&L: use the market_maker's final value
-        # scaled by trade index (linear interpolation)
-        if i > 0:
-            prev = trades[i - 1]
-            if t["side"] == "sell" and prev.get("position_after", 0) > 0:
-                running_pnl += t["size"] * (t["price"] - prev["price"])
-            elif t["side"] == "buy" and prev.get("position_after", 0) < 0:
-                running_pnl += t["size"] * (prev["price"] - t["price"])
-        cum_realized.append(running_pnl)
+        realized_pnl.append(t.get("realized_pnl_cumul", 0.0))
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8), sharex=True)
 
     # P&L chart
-    ax1.plot(timestamps, cum_realized, color="green", linewidth=1.2)
+    ax1.plot(timestamps, realized_pnl, color="green", linewidth=1.2)
     ax1.axhline(y=0, color="gray", linestyle="--", alpha=0.5)
-    ax1.set_title("Approximate Cumulative Realized P&L")
+    ax1.set_title("Cumulative Realized P&L")
     ax1.set_ylabel("P&L (USD)")
     ax1.grid(True, alpha=0.3)
 

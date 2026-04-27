@@ -242,7 +242,8 @@ class MarketMaker:
                 "price": price,
                 "size": size,
                 "position_after": self.position_btc,
-                "quote_size_at_fill": size
+                "quote_size_at_fill": size,
+                "realized_pnl_cumul": self.realized_pnl
             })
 
     def _update_position_buy(self, price, size):

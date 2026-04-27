@@ -1,18 +1,13 @@
 """
-export.py - Export trade logs and P&L history to CSV files.
-
-Generates two files:
-  - trade_log.csv: all simulated fills with position/P&L state
-  - pnl_summary.csv: periodic snapshots of strategy metrics
+export.py - Export trade logs and spread history to CSV.
 """
 
 import csv
-import time
 from datetime import datetime
 
 
 def export_trades(market_maker, filename="trade_log.csv"):
-    """Export all executed trades to CSV."""
+    """Export all executed trades with cumulative realized P&L."""
     trades = market_maker.executed_trades
     if not trades:
         print("[EXPORT] No trades to export.")
@@ -22,7 +17,7 @@ def export_trades(market_maker, filename="trade_log.csv"):
         writer = csv.writer(f)
         writer.writerow([
             "timestamp", "datetime", "side", "price", "size",
-            "position_after"
+            "position_after", "realized_pnl_cumul"
         ])
         for t in trades:
             dt = datetime.fromtimestamp(t["timestamp"]).strftime(
@@ -33,13 +28,14 @@ def export_trades(market_maker, filename="trade_log.csv"):
                 t["side"],
                 f"{t['price']:.2f}",
                 f"{t['size']:.6f}",
-                f"{t['position_after']:.6f}"
+                f"{t['position_after']:.6f}",
+                f"{t.get('realized_pnl_cumul', 0.0):.2f}"
             ])
     print(f"[EXPORT] {len(trades)} trades exported to {filename}")
 
 
 def export_spread_history(spread_analytics, filename="spread_history.csv"):
-    """Export spread history for all tracked sizes to CSV."""
+    """Export spread history for all tracked sizes."""
     with open(filename, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["size_btc", "index", "spread_usd"])
