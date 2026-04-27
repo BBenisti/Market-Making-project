@@ -43,7 +43,7 @@ pip install -r requirements.txt
 python simulator.py
 ```
 
-`Ctrl+C` to stop. Exports `trade_log.csv`, `spread_history.csv`, `spread_history.png`, `pnl_position.png` on shutdown.
+`Ctrl+C` TWICE to stop. Exports `trade_log.csv`, `spread_history.csv`, `spread_history.png`, `pnl_position.png` on shutdown.
 
 ## Configuration
 
@@ -64,11 +64,11 @@ All parameters in `config.py`:
 ## Sample Output
 
 ```
-  Mid Price:    $   76,438.85       Realized Vol: $   0.20
-  Bid: $76,425.60    Ask: $76,444.10    Half-Spread: $9.25
-  Quote Size: 0.9452 BTC
+  Mid Price:    $   77,680.25       Realized Vol: $   0.43
+  Bid: $77,670.72    Ask: $77,709.89    Half-Spread: $19.58
+  Quote Size: 2.6703 BTC
 
-  Position:    0.310000 BTC    Exposure: $23,696    Total P&L: +$51.75
+  Position:    -1.0397000 BTC    Exposure: $80,764.16    Total P&L: +$21.02
   Fills: 10
 ```
 
